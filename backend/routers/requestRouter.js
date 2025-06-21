@@ -93,7 +93,7 @@ router.post('/authenticate', (req, res) => {
             const {_id, name, email} = result;
             const payload = {_id, name, email};
 
-            jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '6h'}, (err, token) => {
+            jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '120'}, (err, token) => {
                 if(err){
                     console.log(err);
                     res.status(500).json(err);

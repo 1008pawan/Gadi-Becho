@@ -36,14 +36,14 @@ const ManageRequest = () => {
 
   return (
     <div className="w-[95%] mx-auto ">
-      <div className="bg-zinc-100 h-screen py-20">
+      <div className="bg-zinc-100 h-screen py-20 px-6">
         <h1 className="text-5xl font-bold pb-15 text-center">Manage Request</h1>
         <div className="container mx-auto bg-zinc-50 lg:overflow-auto overflow-x-scroll">
           {loading ? (
             <p>Loading...Please Wait...</p>
           ) : (
             <table className="w-full shadow-2xl bg-zinc-50">
-              <thead className="border-black bg-zinc-100 text-zinc-600 font-bold text-center">
+              <thead className="border-black bg-zinc-200 text-zinc-600 font-bold text-center">
                 <tr>
                   <td>ID</td>
                   <td>Status</td>

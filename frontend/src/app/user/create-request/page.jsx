@@ -1,219 +1,272 @@
-"use client";
-import axios from "axios";
-import { useFormik } from "formik";
-import React from "react";
-import toast from "react-hot-toast";
-import * as Yup from "yup";
+'use client';
 
-const requestSchema = Yup.object().shape({
-  fullName: Yup.string()
-    .min(2, "Too Short")
-    .max(50, "Too Long")
-    .required("Full Name is required"),
-  contactNumber: Yup.string()
-    .matches(/^\d{10}$/, "Contact Number must be 10 digits")
-    .required("Contact Number is required"),
-  reqNumber: Yup.string().required("Registration Number is required"),
-  vehicleLocation: Yup.string().required("Vehicle Location is required"),
-  vehicleDescription: Yup.string()
-    .min(10, "Description too short")
-    .required("Vehicle Description is required"),
-});
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-const CreateRequest = () => {
-  const createRequestForm = useFormik({
-    initialValues: {
-      fullName: "",
-      contactNumber: "",
-      reqNumber: "",
-      vehicleLocation: "",
-      vehicleDescription: "", // fixed typo here
-    },
-    validationSchema: requestSchema,
-    onSubmit: async (values, { resetForm }) => {
-      // Get the token from localStorage
-      const token = localStorage.getItem("token");
-      if (!token) {
-        toast.error("Please login first");
-        return;
+export default function CreateRequest() {
+  const router = useRouter();
+  const [vendors, setVendors] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    contactNumber: '',
+    vendorId: '',
+    vehicleLocation: '',
+    vehicleDescription: '',
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  // Fetch user data from local storage on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/user-signin');
+      return;
+    }
+
+    // Decode JWT to get user data
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const userData = JSON.parse(window.atob(base64));
+      setUser(userData);
+    } catch (err) {
+      console.error('Error parsing token:', err);
+      localStorage.removeItem('token');
+      router.push('/user-signin');
+    }
+
+    // Fetch available vendors
+    fetchVendors();
+  }, [router]);
+
+  const fetchVendors = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/vendor/getall');
+      if (response.ok) {
+        const data = await response.json();
+        setVendors(data);
+      } else {
+        console.error('Failed to fetch vendors');
       }
+    } catch (err) {
+      console.error('Error fetching vendors:', err);
+    }
+  };
 
-      // Decode the token to get user ID
-      let userId = "";
-      try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        userId = decodedToken._id;
-      } catch (err) {
-        toast.error("Invalid token. Please login again.");
-        return;
-      }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-      // Add userId to the request data
-      const requestData = {
-        ...values,
-        userId: userId,
+  const generateRequestNumber = () => {
+    // Generate a unique request number using timestamp and random string
+    const timestamp = new Date().getTime().toString().slice(-6);
+    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `REQ-${timestamp}-${random}`;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    if (!user || !user._id) {
+      setError('User authentication error. Please login again.');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.vendorId) {
+      setError('Please select a vendor.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const reqData = {
+        ...formData,
+        userId: user._id,
+        reqNumber: generateRequestNumber(),
+        status: 'pending',
       };
 
-      try {
-        await axios.post("http://localhost:5000/request/add", requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch('http://localhost:5000/request/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqData),
+      });
+
+      if (response.ok) {
+        setSuccess('Request created successfully!');
+        setFormData({
+          fullName: '',
+          contactNumber: '',
+          vendorId: '',
+          vehicleLocation: '',
+          vehicleDescription: '',
         });
-        toast.success("Request Created Successfully");
-        resetForm();
-      } catch (err) {
-        toast.error(
-          err.response?.data?.message || "Request Creation Failed"
-        );
-        console.log(err);
+        
+        // Redirect to manage requests page after short delay
+        setTimeout(() => {
+          router.push('/user/manage-request');
+        }, 2000);
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Failed to create request. Please try again.');
       }
-    },
-  });
-
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+      console.error('Error creating request:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   return (
-    <div className="flex justify-center items-center bg-gradient-to-br from-blue-100 to-blue-300">
-      <div className="xl:w-[40%] lg:w-[46%] md:w-[60%] sm:w-[80%] w-[90%] my-10 border border-zinc-300 shadow-2xl p-8 rounded-2xl bg-white">
-        <h1 className="text-5xl font-bold text-center py-2 text-blue-500">
-          Great!!
-        </h1>
-        <h2 className="font-bold md:text-2xl text-xl text-center text-blue-500">
-          We found buyers for you, we just need some information.
-        </h2>
-        <p className="text-sm text-center py-2">
-          We handle everything from towing and dismantling to providing a
-          certificate of recycling for you. Simply fill out the form and we'll
-          be in touch with you shortly.
-        </p>
-        <div className="my-3">
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={createRequestForm.handleSubmit}
-          >
-            {/* full Name */}
-            <div className="flex items-center justify-center">
-              <label htmlFor="fullName" className="relative w-full">
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  placeholder="Enter your Full Name..."
-                  onChange={createRequestForm.handleChange}
-                  onBlur={createRequestForm.handleBlur}
-                  value={createRequestForm.values.fullName}
-                  className="text-zinc-600 outline-none border border-zinc-400 rounded-sm w-full p-3"
-                />
-              </label>
-            </div>
-            {createRequestForm.errors.fullName &&
-              createRequestForm.touched.fullName && (
-                <p className="text-xs text-red-500 mt-2 text-center">
-                  {createRequestForm.errors.fullName}
-                </p>
-              )}
-
-            {/* contact Number */}
-            <div className="flex items-center justify-center">
-              <label htmlFor="contactNumber" className="relative w-full">
-                <input
-                  type="text"
-                  id="contactNumber"
-                  name="contactNumber"
-                  placeholder="Enter your Contact Number..."
-                  onChange={createRequestForm.handleChange}
-                  onBlur={createRequestForm.handleBlur}
-                  value={createRequestForm.values.contactNumber}
-                  className="text-zinc-600 outline-none border border-zinc-400 rounded-sm w-full p-3"
-                />
-              </label>
-            </div>
-            {createRequestForm.errors.contactNumber &&
-              createRequestForm.touched.contactNumber && (
-                <p className="text-xs text-red-500 mt-2 text-center">
-                  {createRequestForm.errors.contactNumber}
-                </p>
-              )}
-
-            {/* reqNumber */}
-            <div className="flex items-center justify-center">
-              <label htmlFor="reqNumber" className="relative w-full">
-                <input
-                  type="text"
-                  id="reqNumber"
-                  name="reqNumber"
-                  placeholder="Enter your Vehicle Registration Number..."
-                  onChange={createRequestForm.handleChange}
-                  onBlur={createRequestForm.handleBlur}
-                  value={createRequestForm.values.reqNumber}
-                  className="text-zinc-600 outline-none border border-zinc-400 rounded-sm w-full p-3"
-                />
-              </label>
-            </div>
-            {createRequestForm.errors.reqNumber &&
-              createRequestForm.touched.reqNumber && (
-                <p className="text-xs text-red-500 mt-2 text-center">
-                  {createRequestForm.errors.reqNumber}
-                </p>
-              )}
-
-            {/* vehicle Location */}
-            <div className="flex items-center justify-center">
-              <label htmlFor="vehicleLocation" className="relative w-full">
-                <input
-                  type="text"
-                  id="vehicleLocation"
-                  name="vehicleLocation"
-                  placeholder="Enter your Vehicle Location..."
-                  onChange={createRequestForm.handleChange}
-                  onBlur={createRequestForm.handleBlur}
-                  value={createRequestForm.values.vehicleLocation}
-                  className="text-zinc-600 outline-none border border-zinc-400 rounded-sm w-full p-3"
-                />
-              </label>
-            </div>
-            {createRequestForm.errors.vehicleLocation &&
-              createRequestForm.touched.vehicleLocation && (
-                <p className="text-xs text-red-500 mt-2 text-center">
-                  {createRequestForm.errors.vehicleLocation}
-                </p>
-              )}
-
-            {/* vehicle Description */}
-            <div className="flex items-center justify-center">
-              <label htmlFor="vehicleDescription" className="relative w-full">
-                <textarea
-                  id="vehicleDescription"
-                  name="vehicleDescription"
-                  placeholder="Enter your Vehicle Description..."
-                  onChange={createRequestForm.handleChange}
-                  onBlur={createRequestForm.handleBlur}
-                  value={createRequestForm.values.vehicleDescription}
-                  className="text-zinc-600 outline-none border border-zinc-400 rounded-sm w-full p-3"
-                  rows={4}
-                />
-              </label>
-            </div>
-            {createRequestForm.errors.vehicleDescription &&
-              createRequestForm.touched.vehicleDescription && (
-                <p className="text-xs text-red-500 mt-2 text-center">
-                  {createRequestForm.errors.vehicleDescription}
-                </p>
-              )}
-
-            <div className="text-center">
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-8 py-2 rounded-lg"
-                disabled={createRequestForm.isSubmitting}
-              >
-                {createRequestForm.isSubmitting ? "Sending..." : "Send"}
-              </button>
-            </div>
-          </form>
+    <div className='bg-gradient-to-b from-blue-200 to-blue-100 min-h-screen w-full py-10 px-4 flex justify-center items-center'>
+      <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-2xl p-8 w-full border border-blue-100">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold text-blue-600 mb-2">Create Request</h1>
+          <p className="text-gray-500">Fill in the details to submit your scrap vehicle request</p>
         </div>
+        
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6 flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm-1 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
+        
+        {success && (
+          <div className="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded mb-6 flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span>{success}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700" htmlFor="fullName">
+                Full Name
+              </label>
+              <input
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                id="fullName"
+                name="fullName"
+                type="text"
+                value={formData.fullName}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700" htmlFor="contactNumber">
+                Contact Number
+              </label>
+              <input
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                id="contactNumber"
+                name="contactNumber"
+                type="tel"
+                pattern="[0-9]{10}"
+                value={formData.contactNumber}
+                onChange={handleChange}
+                placeholder="Enter 10-digit contact number"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700" htmlFor="vehicleLocation">
+              Vehicle Location
+            </label>
+            <input
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              id="vehicleLocation"
+              name="vehicleLocation"
+              type="text"
+              value={formData.vehicleLocation}
+              onChange={handleChange}
+              placeholder="Enter vehicle location"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700" htmlFor="vendorId">
+              Select Vendor
+            </label>
+            <select
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
+              id="vendorId"
+              name="vendorId"
+              value={formData.vendorId}
+              onChange={handleChange}
+              required
+            >
+              <option value="">-- Select a Vendor --</option>
+              {vendors.map((vendor) => (
+                <option key={vendor._id} value={vendor._id}>
+                  {vendor.name} - {vendor.location}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700" htmlFor="vehicleDescription">
+              Vehicle Description
+            </label>
+            <textarea
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              id="vehicleDescription"
+              name="vehicleDescription"
+              rows="4"
+              value={formData.vehicleDescription}
+              onChange={handleChange}
+              placeholder="Enter details about your vehicle (make, model, year, condition, etc.)"
+              required
+            ></textarea>
+          </div>
+
+          <div className="pt-4">
+            <button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors flex justify-center items-center"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                'Submit Request'
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
-};
-
-export default CreateRequest;
+}
