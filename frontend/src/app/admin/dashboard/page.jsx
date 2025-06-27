@@ -18,7 +18,8 @@ const Dashboard = () => {
       const [usersRes, vendorsRes, requestsRes] = await Promise.all([
         axios.get('http://localhost:5000/user/getall'),
         axios.get('http://localhost:5000/vendor/getall'),
-        axios.get('http://localhost:5000/request/getall')   
+        axios.get('http://localhost:5000/request/getall'),
+
       ]);
 
       setStats({
@@ -36,6 +37,21 @@ const Dashboard = () => {
       console.error('Error fetching dashboard data:', error);
     }
     setLoading(false);
+  };
+
+  const getStatusBadge = (status) => {
+    const statusClasses = {
+      pending: "bg-yellow-100 text-yellow-800",
+      approved: "bg-blue-100 text-blue-800",
+      completed: "bg-green-100 text-green-800",
+      rejected: "bg-red-100 text-red-800"
+    };
+    
+    return (
+      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClasses[status] || statusClasses.pending}`}>
+        {status || 'pending'}
+      </span>
+    );
   };
 
   useEffect(() => {
@@ -100,7 +116,7 @@ const Dashboard = () => {
         <h2 className="text-xl font-semibold mb-4">Recent Requests</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-100">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
@@ -111,16 +127,11 @@ const Dashboard = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {recentRequests.map((request) => (
-                <tr key={request._id}>
+                <tr key={request._id} className='hover:bg-gray-50'>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{request._id.slice(-6)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{request.fullName}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${request._Status === 'Approved' ? 'bg-green-100 text-green-800' : 
-                        request._Status === 'Rejected' ? 'bg-red-100 text-red-800' : 
-                        'bg-yellow-100 text-yellow-800'}`}>
-                      {request._Status || 'Pending'}
-                    </span>
+                    {getStatusBadge(request.status)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{request.vehicleLocation}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{request.vehicleDescription}</td>

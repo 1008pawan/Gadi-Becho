@@ -3,7 +3,7 @@ const { Schema, model } = require('../connection');
 
 const feedbackSchema = new Schema({
     name: String,
-    email: {type: String, unique:true},
+    email: {type: String, unique:true, require:true},
     message: {type: String, require:true}
 });
 

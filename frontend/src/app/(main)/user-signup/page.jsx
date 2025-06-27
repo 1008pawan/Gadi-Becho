@@ -28,7 +28,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
 
-  const signupForm = useFormik({
+  const updateForm = useFormik({
     initialValues: {
       name: "",
       email: "",
@@ -53,7 +53,7 @@ const Signup = () => {
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300 py-20">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200 py-20">
       <div className="w-full max-w-lg bg-white border border-zinc-200 shadow-2xl p-10 rounded-2xl">
         <h1 className="text-4xl font-bold text-center mb-2">Sign up</h1>
         <p className="mb-6 text-center text-gray-600">
@@ -62,7 +62,7 @@ const Signup = () => {
             Sign in here
           </a>
         </p>
-        <form onSubmit={signupForm.handleSubmit} className="space-y-4">
+        <form onSubmit={updateForm.handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="name" className="block font-medium mb-1">
               Name
@@ -72,12 +72,12 @@ const Signup = () => {
               id="name"
               name="name"
               placeholder="Enter your Name..."
-              onChange={signupForm.handleChange}
-              value={signupForm.values.name}
-              className={`w-full p-3 border rounded focus:outline-none ${signupForm.errors.name && signupForm.touched.name ? "border-red-400" : "border-zinc-300"}`}
+              onChange={updateForm.handleChange}
+              value={updateForm.values.name}
+              className={`w-full p-3 border rounded focus:outline-none ${updateForm.errors.name && updateForm.touched.name ? "border-red-400" : "border-zinc-300"}`}
             />
-            {signupForm.errors.name && signupForm.touched.name && (
-              <p className="text-xs text-red-500 mt-1">{signupForm.errors.name}</p>
+            {updateForm.errors.name && updateForm.touched.name && (
+              <p className="text-xs text-red-500 mt-1">{updateForm.errors.name}</p>
             )}
           </div>
           <div>
@@ -89,12 +89,12 @@ const Signup = () => {
               id="email"
               name="email"
               placeholder="Enter your Email..."
-              onChange={signupForm.handleChange}
-              value={signupForm.values.email}
-              className={`w-full p-3 border rounded focus:outline-none ${signupForm.errors.email && signupForm.touched.email ? "border-red-400" : "border-zinc-300"}`}
+              onChange={updateForm.handleChange}
+              value={updateForm.values.email}
+              className={`w-full p-3 border rounded focus:outline-none ${updateForm.errors.email && updateForm.touched.email ? "border-red-400" : "border-zinc-300"}`}
             />
-            {signupForm.errors.email && signupForm.touched.email && (
-              <p className="text-xs text-red-500 mt-1">{signupForm.errors.email}</p>
+            {updateForm.errors.email && updateForm.touched.email && (
+              <p className="text-xs text-red-500 mt-1">{updateForm.errors.email}</p>
             )}
           </div>
           <div>
@@ -106,12 +106,12 @@ const Signup = () => {
               id="city"
               name="city"
               placeholder="Enter your City..."
-              onChange={signupForm.handleChange}
-              value={signupForm.values.city}
-              className={`w-full p-3 border rounded focus:outline-none ${signupForm.errors.city && signupForm.touched.city ? "border-red-400" : "border-zinc-300"}`}
+              onChange={updateForm.handleChange}
+              value={updateForm.values.city}
+              className={`w-full p-3 border rounded focus:outline-none ${updateForm.errors.city && updateForm.touched.city ? "border-red-400" : "border-zinc-300"}`}
             />
-            {signupForm.errors.city && signupForm.touched.city && (
-              <p className="text-xs text-red-500 mt-1">{signupForm.errors.city}</p>
+            {updateForm.errors.city && updateForm.touched.city && (
+              <p className="text-xs text-red-500 mt-1">{updateForm.errors.city}</p>
             )}
           </div>
           <div>
@@ -124,9 +124,9 @@ const Signup = () => {
                 id="password"
                 name="password"
                 placeholder="Enter Password..."
-                onChange={signupForm.handleChange}
-                value={signupForm.values.password}
-                className={`w-full p-3 border rounded focus:outline-none ${signupForm.errors.password && signupForm.touched.password ? "border-red-400" : "border-zinc-300"}`}
+                onChange={updateForm.handleChange}
+                value={updateForm.values.password}
+                className={`w-full p-3 border rounded focus:outline-none ${updateForm.errors.password && updateForm.touched.password ? "border-red-400" : "border-zinc-300"}`}
               />
               <span
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
@@ -135,8 +135,8 @@ const Signup = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            {signupForm.errors.password && signupForm.touched.password && (
-              <p className="text-xs text-red-500 mt-1">{signupForm.errors.password}</p>
+            {updateForm.errors.password && updateForm.touched.password && (
+              <p className="text-xs text-red-500 mt-1">{updateForm.errors.password}</p>
             )}
           </div>
           <div>
@@ -149,9 +149,9 @@ const Signup = () => {
                 id="confirmPassword"
                 name="confirmPassword"
                 placeholder="Confirm Password..."
-                onChange={signupForm.handleChange}
-                value={signupForm.values.confirmPassword}
-                className={`w-full p-3 border rounded focus:outline-none ${signupForm.errors.confirmPassword && signupForm.touched.confirmPassword ? "border-red-400" : "border-zinc-300"}`}
+                onChange={updateForm.handleChange}
+                value={updateForm.values.confirmPassword}
+                className={`w-full p-3 border rounded focus:outline-none ${updateForm.errors.confirmPassword && updateForm.touched.confirmPassword ? "border-red-400" : "border-zinc-300"}`}
               />
               <span
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
@@ -160,8 +160,8 @@ const Signup = () => {
                 {showCPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            {signupForm.errors.confirmPassword && signupForm.touched.confirmPassword && (
-              <p className="text-xs text-red-500 mt-1">{signupForm.errors.confirmPassword}</p>
+            {updateForm.errors.confirmPassword && updateForm.touched.confirmPassword && (
+              <p className="text-xs text-red-500 mt-1">{updateForm.errors.confirmPassword}</p>
             )}
           </div>
           <div className="flex items-center gap-2">

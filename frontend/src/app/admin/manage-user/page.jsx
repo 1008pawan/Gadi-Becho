@@ -35,14 +35,14 @@ const ManageUser = () => {
   }, []);
 
   return (
-    <div className="h-screen px-6 py-20 bg-gray-100">
+    <div className="h-screen px-6 py-20 bg-gray-200 ">
       <h1 className="text-center font-bold text-4xl py-5 text-zinc-800">Manage Users</h1>
-      <div className="container mx-auto bg-gray-50 rounded-xl">
+      <div className="container mx-auto bg-zinc-50 lg:overflow-auto overflow-x-scroll rounded-lg shadow-2xl">
         {loading ? (
           <p>Loading...Please Wait....!!</p>
         ) : (
-          <table className="w-full shadow-2xl rounded-xl">
-            <thead className="bg-gray-100  text-zinc-500 rounded-xl">
+          <table className="w-full"> 
+            <thead className="bg-gray-100  text-zinc-500">
               <tr>
                 <th className="py-1">ID</th>
                 <th className="py-1">Name</th>
@@ -51,7 +51,7 @@ const ManageUser = () => {
                 <th className="py-1">Action</th>
               </tr>
             </thead>
-            <tbody className="text-left">
+            <tbody className="text-center">
               {userList.map((user) => {
                 return (
                   <tr key={user._id}>

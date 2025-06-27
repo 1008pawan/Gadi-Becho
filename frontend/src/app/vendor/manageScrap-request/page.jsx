@@ -83,14 +83,14 @@ const ManageRequest = () => {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className='w-full'>
+                <table className='w-full text-center'>
                   <thead className='bg-gray-50'>
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer Details</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle Details</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
+                      <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Customer Details</th>
+                      <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                      <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle Details</th>
+                      <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-200'>
@@ -107,7 +107,7 @@ const ManageRequest = () => {
                         <td className='px-6 py-4 whitespace-normal text-sm text-gray-500'>
                           <p className="text-xs">{request.vehicleDescription}</p>
                         </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
                           <button
                             onClick={() => deleteRequest(request._id)}
                             className='inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'

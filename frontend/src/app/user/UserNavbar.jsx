@@ -61,7 +61,7 @@ const UserNavbar = () => {
             </Link>
             <button
               onClick={handleLogout}
-              className="text-white bg-blue-500 border px-4 py-2 rounded-lg transition-colors hover:bg-white hover:text-blue-500 border-b-2"
+              className="text-white bg-red-500 border px-4 py-2 rounded-lg transition-colors hover:bg-white hover:text-red-500 border-b-2 cursor-pointer"
             >
               Logout
             </button>

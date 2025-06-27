@@ -41,7 +41,7 @@ const ManageFeedback = () => {
     <div className=''>
       <div className='bg-zinc-100 h-screen px-6 py-20'>
           <h1 className='text-5xl font-bold pb-15 text-center'>Manage Feedback</h1>
-          <div className='container mx-auto bg-zinc-50 lg:overflow-auto overflow-x-scroll'>
+          <div className='container mx-auto bg-zinc-50 lg:overflow-auto overflow-x-scroll rounded-lg shadow-2xl'>
           {loading ? (
             <p>Loading...Please Wait...</p>
           ) : (

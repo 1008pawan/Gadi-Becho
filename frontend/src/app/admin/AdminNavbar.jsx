@@ -10,6 +10,7 @@ import {
   IconUser,
   IconLogout
 } from '@tabler/icons-react';
+import { Contact } from 'lucide-react';
 
 const AdminNavbar = () => {
   const pathname = usePathname();
@@ -42,6 +43,11 @@ const AdminNavbar = () => {
       icon: IconFileDescription
     },
     {
+      label: 'Manage Contact',
+      href: '/admin/manage-contact',
+      icon: Contact
+    },
+    {
       label: 'Profile',
       href: '/admin/profile',
       icon: IconUser
@@ -57,7 +63,7 @@ const AdminNavbar = () => {
 
   return (
     <nav className="bg-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-2">
         <div className="flex justify-between h-16">
           {/* Logo and Brand */}
           <div className="flex items-center">
@@ -67,7 +73,7 @@ const AdminNavbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -75,7 +81,7 @@ const AdminNavbar = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out
+                  className={`flex items-center px-1 py-2 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out
                     ${isActive 
                       ? 'bg-blue-100 text-blue-700' 
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'

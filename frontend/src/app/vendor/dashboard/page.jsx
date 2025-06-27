@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import VendorNavbar from "../VendorNavbar";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -15,11 +16,6 @@ const Dashboard = () => {
   const [recentRequests, setRecentRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Contact number updating state
-  const [isEditingContact, setIsEditingContact] = useState(false);
-  const [contactNumberToEdit, setContactNumberToEdit] = useState({ id: "", number: "" });
-  const [contactNumberError, setContactNumberError] = useState("");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -52,7 +48,7 @@ const Dashboard = () => {
         if (!statsResponse.ok) {
           if (statsResponse.status === 401) {
             console.log("Unauthorized access, removing token");
-            localStorage.removeItem("vendortoken");
+            localStorage.removeItem("token");
             router.push("/vendor-login");
             return;
           }
@@ -64,7 +60,7 @@ const Dashboard = () => {
         const statsData = await statsResponse.json();
         console.log("Stats data received:", statsData);
 
-        // Fetch recent requests
+        // Fetch recent requests  
         console.log("Fetching recent requests from:", "http://localhost:5000/vendor/recent-requests");
         const requestsResponse = await fetch(
           "http://localhost:5000/vendor/recent-requests",
@@ -104,66 +100,6 @@ const Dashboard = () => {
 
     fetchDashboardData();
   }, [router]);
-
-  // Function to handle starting the edit process for a contact number
-  const handleEditContactNumber = (request) => {
-    setContactNumberToEdit({ 
-      id: request._id, 
-      number: request.contactNumber || ""
-    });
-    setIsEditingContact(true);
-    setContactNumberError("");
-  };
-
-  // Function to validate and update contact number
-  const updateContactNumber = async () => {
-    try {
-      // Validate contact number (must be 10 digits)
-      if (!/^\d{10}$/.test(contactNumberToEdit.number)) {
-        setContactNumberError("Contact number must be exactly 10 digits");
-        return;
-      }
-
-      setContactNumberError("");
-      const token = localStorage.getItem("vendortoken");
-      
-      if (!token) {
-        console.log("No token found for updating contact");
-        return;
-      }
-
-      // Update the contact number via API
-      const response = await fetch(`http://localhost:5000/request/update/${contactNumberToEdit.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ contactNumber: contactNumberToEdit.number })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update contact number");
-      }
-
-      // Update the local state to reflect the change
-      setRecentRequests(recentRequests.map(request => {
-        if (request._id === contactNumberToEdit.id) {
-          return { ...request, contactNumber: contactNumberToEdit.number };
-        }
-        return request;
-      }));
-
-      setIsEditingContact(false);
-      
-      // Show success message
-      alert("Contact number updated successfully");
-      
-    } catch (error) {
-      console.error("Error updating contact number:", error);
-      setContactNumberError("Failed to update contact number: " + error.message);
-    }
-  };
 
   const renderContent = () => {
     if (loading) {
@@ -383,7 +319,7 @@ const Dashboard = () => {
                           scope="col"
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Vehicle
+                          Location & Description
                         </th>
                         <th
                           scope="col"
@@ -402,12 +338,6 @@ const Dashboard = () => {
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
                           Date
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Actions
                         </th>
                       </tr>
                     </thead>
@@ -428,8 +358,13 @@ const Dashboard = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {request.contactNumber || "Not available"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {request.vehicleLocation || "No Location"}
+                          <td className="px-6 py-4 whitespace-normal text-sm text-gray-500">
+                            <p><span className="font-medium">Location:</span> {request.vehicleLocation || "No Location"}</p>
+                            {request.vehicleDescription && (
+                              <p className="text-xs mt-1 max-w-xs truncate" title={request.vehicleDescription}>
+                                {request.vehicleDescription}
+                              </p>
+                            )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
@@ -452,14 +387,6 @@ const Dashboard = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {new Date(request.createdAt).toLocaleDateString()}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button
-                              onClick={() => handleEditContactNumber(request)}
-                              className="text-blue-600 hover:text-blue-900"
-                            >
-                              Edit Contact
-                            </button>
                           </td>
                         </tr>
                       ))}
@@ -500,56 +427,9 @@ const Dashboard = () => {
     );
   };
 
-  // Contact Number Edit Modal - show only when editing
-  const renderContactEditModal = () => {
-    if (!isEditingContact) return null;
-
-    return (
-      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Update Contact Number</h3>
-          <div>
-            <label htmlFor="contactNumber" className="block text-sm font-medium text-gray-700">
-              Contact Number
-            </label>
-            <input
-              type="text"
-              id="contactNumber"
-              value={contactNumberToEdit.number}
-              onChange={(e) => setContactNumberToEdit({...contactNumberToEdit, number: e.target.value})}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="10 digit number"
-              maxLength={10}
-            />
-            {contactNumberError && (
-              <p className="mt-2 text-sm text-red-600">{contactNumberError}</p>
-            )}
-          </div>
-          <div className="mt-5 sm:mt-6 flex justify-end space-x-2">
-            <button
-              type="button"
-              className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              onClick={() => setIsEditingContact(false)}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              onClick={updateContactNumber}
-            >
-              Update
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
       {renderContent()}
-      {renderContactEditModal()}
     </>
   );
 };

@@ -86,19 +86,19 @@ const ManageRequest = () => {
                         <p>{request.vehicleDescription}</p>
                       </td>
                       <td className="p-2">
-                        <button className="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-lg border hover:bg-green-600 active:bg-green-800">
-                          <Link href={`/update-request/${request._id}`}>
-                            <IconPencilCheck size={20} />
-                          </Link>
-                          Update
-                        </button>
+                        <Link href={`/user/update-request/${request._id}`}>
+                          <button className="inline-flex text-sm items-center bg-green-500 text-white px-4 py-2 rounded-lg border hover:bg-green-600 active:bg-green-800">
+                            <IconPencilCheck size={15} />
+                            Update
+                          </button>
+                        </Link>
                         <button
-                          className="inline-flex items-center bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2"
+                          className="inline-flex items-center text-sm bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2"
                           onClick={() => {
                             deleteRequest(request._id);
                           }}
                         >
-                          <IconTrash size={20} />
+                          <IconTrash size={15} />
                           Remove
                         </button>
                       </td>

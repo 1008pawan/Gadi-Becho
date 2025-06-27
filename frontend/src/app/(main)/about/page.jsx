@@ -3,6 +3,7 @@ import SecondCard from '@/components/SecondCard'
 import ThirdCard from '@/components/ThirdCard'
 import { IconCar, IconRecycle } from '@tabler/icons-react'
 import { Car, CheckCircle, Clock, DollarSign, Mail, MapPin, Phone, Recycle, Shield, Users } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
 const aboutUs = () => {
@@ -66,29 +67,6 @@ const aboutUs = () => {
 
         </section>
 
-        {/* Stats Section */}
-        <section className="py-16 bg-gradient-to-r from-orange-600 to-blue-600 text-white">
-            <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-4 gap-8 text-center">
-                <div>
-                <div className="text-4xl font-bold mb-2">10,000+</div>
-                <div className="text-green-100">Cars Scrapped</div>
-                </div>
-                <div>
-                <div className="text-4xl font-bold mb-2">₹50L+</div>
-                <div className="text-green-100">Paid to Customers</div>
-                </div>
-                <div>
-                <div className="text-4xl font-bold mb-2">24hrs</div>
-                <div className="text-green-100">Average Processing</div>
-                </div>
-                <div>
-                <div className="text-4xl font-bold mb-2">4.8★</div>
-                <div className="text-green-100">Customer Rating</div>
-                </div>
-            </div>
-            </div>
-        </section>
 
         {/* Contact Section */}
         <section className='text-center py-20'>
@@ -100,10 +78,12 @@ const aboutUs = () => {
                 <ThirdCard svg={<MapPin className="w-12 h-12 text-purple-600 mx-auto" />} heading={'Visit Us'} heading2={'123 Business Park'} para={'Mumbai, Maharashtra 400001'} />
             </div>
             <div className='flex justify-center items-center'>
+            <Link href={'/user-signin'}>
                 <button className="bg-blue-500 flex justify-center items-center px-3 py-2 rounded-lg shadow-xl hover:bg-white hover:text-blue-500 hover:border hover:border-blue-500">
                     <Car className="w-5 h-5 mr-2" />
                     Start Scrapping Your Car
                 </button>
+            </Link>
             </div>
         </section>
     </div>

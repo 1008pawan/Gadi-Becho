@@ -28,7 +28,7 @@ const VendorSignup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
 
-  const vendorSignupForm = useFormik({
+  const vendorupdateForm = useFormik({
     initialValues: {
       name: "",
       email: "",
@@ -62,7 +62,7 @@ const VendorSignup = () => {
             Vendor Sign in here
           </a>
         </p>
-        <form onSubmit={vendorSignupForm.handleSubmit} className="space-y-4">
+        <form onSubmit={vendorupdateForm.handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="name" className="block font-medium mb-1">
               Name
@@ -72,12 +72,12 @@ const VendorSignup = () => {
               id="name"
               name="name"
               placeholder="Enter your Name..."
-              onChange={vendorSignupForm.handleChange}
-              value={vendorSignupForm.values.name}
-              className={`w-full p-3 border rounded focus:outline-none ${vendorSignupForm.errors.name && vendorSignupForm.touched.name ? "border-red-400" : "border-zinc-300"}`}
+              onChange={vendorupdateForm.handleChange}
+              value={vendorupdateForm.values.name}
+              className={`w-full p-3 border rounded focus:outline-none ${vendorupdateForm.errors.name && vendorupdateForm.touched.name ? "border-red-400" : "border-zinc-300"}`}
             />
-            {vendorSignupForm.errors.name && vendorSignupForm.touched.name && (
-              <p className="text-xs text-red-500 mt-1">{vendorSignupForm.errors.name}</p>
+            {vendorupdateForm.errors.name && vendorupdateForm.touched.name && (
+              <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.name}</p>
             )}
           </div>
           <div>
@@ -89,12 +89,12 @@ const VendorSignup = () => {
               id="email"
               name="email"
               placeholder="Enter your Email..."
-              onChange={vendorSignupForm.handleChange}
-              value={vendorSignupForm.values.email}
-              className={`w-full p-3 border rounded focus:outline-none ${vendorSignupForm.errors.email && vendorSignupForm.touched.email ? "border-red-400" : "border-zinc-300"}`}
+              onChange={vendorupdateForm.handleChange}
+              value={vendorupdateForm.values.email}
+              className={`w-full p-3 border rounded focus:outline-none ${vendorupdateForm.errors.email && vendorupdateForm.touched.email ? "border-red-400" : "border-zinc-300"}`}
             />
-            {vendorSignupForm.errors.email && vendorSignupForm.touched.email && (
-              <p className="text-xs text-red-500 mt-1">{vendorSignupForm.errors.email}</p>
+            {vendorupdateForm.errors.email && vendorupdateForm.touched.email && (
+              <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.email}</p>
             )}
           </div>
           <div>
@@ -106,12 +106,12 @@ const VendorSignup = () => {
               id="location"
               name="location"
               placeholder="Enter your City..."
-              onChange={vendorSignupForm.handleChange}
-              value={vendorSignupForm.values.location}
-              className={`w-full p-3 border rounded focus:outline-none ${vendorSignupForm.errors.location && vendorSignupForm.touched.location ? "border-red-400" : "border-zinc-300"}`}
+              onChange={vendorupdateForm.handleChange}
+              value={vendorupdateForm.values.location}
+              className={`w-full p-3 border rounded focus:outline-none ${vendorupdateForm.errors.location && vendorupdateForm.touched.location ? "border-red-400" : "border-zinc-300"}`}
             />
-            {vendorSignupForm.errors.location && vendorSignupForm.touched.location && (
-              <p className="text-xs text-red-500 mt-1">{vendorSignupForm.errors.location}</p>
+            {vendorupdateForm.errors.location && vendorupdateForm.touched.location && (
+              <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.location}</p>
             )}
           </div>
           <div>
@@ -124,9 +124,9 @@ const VendorSignup = () => {
                 id="password"
                 name="password"
                 placeholder="Enter Password..."
-                onChange={vendorSignupForm.handleChange}
-                value={vendorSignupForm.values.password}
-                className={`w-full p-3 border rounded focus:outline-none ${vendorSignupForm.errors.password && vendorSignupForm.touched.password ? "border-red-400" : "border-zinc-300"}`}
+                onChange={vendorupdateForm.handleChange}
+                value={vendorupdateForm.values.password}
+                className={`w-full p-3 border rounded focus:outline-none ${vendorupdateForm.errors.password && vendorupdateForm.touched.password ? "border-red-400" : "border-zinc-300"}`}
               />
               <span
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
@@ -135,8 +135,8 @@ const VendorSignup = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            {vendorSignupForm.errors.password && vendorSignupForm.touched.password && (
-              <p className="text-xs text-red-500 mt-1">{vendorSignupForm.errors.password}</p>
+            {vendorupdateForm.errors.password && vendorupdateForm.touched.password && (
+              <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.password}</p>
             )}
           </div>
           <div>
@@ -149,9 +149,9 @@ const VendorSignup = () => {
                 id="confirmPassword"
                 name="confirmPassword"
                 placeholder="Confirm Password..."
-                onChange={vendorSignupForm.handleChange}
-                value={vendorSignupForm.values.confirmPassword}
-                className={`w-full p-3 border rounded focus:outline-none ${vendorSignupForm.errors.confirmPassword && vendorSignupForm.touched.confirmPassword ? "border-red-400" : "border-zinc-300"}`}
+                onChange={vendorupdateForm.handleChange}
+                value={vendorupdateForm.values.confirmPassword}
+                className={`w-full p-3 border rounded focus:outline-none ${vendorupdateForm.errors.confirmPassword && vendorupdateForm.touched.confirmPassword ? "border-red-400" : "border-zinc-300"}`}
               />
               <span
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
@@ -160,8 +160,8 @@ const VendorSignup = () => {
                 {showCPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            {vendorSignupForm.errors.confirmPassword && vendorSignupForm.touched.confirmPassword && (
-              <p className="text-xs text-red-500 mt-1">{vendorSignupForm.errors.confirmPassword}</p>
+            {vendorupdateForm.errors.confirmPassword && vendorupdateForm.touched.confirmPassword && (
+              <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.confirmPassword}</p>
             )}
           </div>
           <div className="flex items-center gap-2">
