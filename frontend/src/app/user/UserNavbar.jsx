@@ -28,7 +28,7 @@ const UserNavbar = () => {
               <img
                 src="/images/logo1.png"
                 alt="Gadi Becho Logo"
-                className="h-12 w-auto"
+                className="h-30 w-auto"
               />
             </Link>
           </div>

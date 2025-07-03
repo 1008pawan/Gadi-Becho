@@ -12,6 +12,7 @@ import {
 import React from "react";
 import Link from "next/link";
 import DivMarque from "@/components/DivMarque";
+import Signup from "./(main)/user-signup/page";
 const page = () => {
   return (
     <div>
@@ -45,9 +46,10 @@ const page = () => {
               <a href="tel:+919876543210">Call: +91 98765 43210</a>
             </button>
           </div>
-        </div>
-        <div className="xl:w-[50%] rounded-lg mt-10 shadow-2xl">
           <img src="/images/img1.jpg" alt="Car image" className="rounded-lg" />
+        </div>
+        <div className="xl:w-[50%]">
+          <Signup />
         </div>
       </section>
 

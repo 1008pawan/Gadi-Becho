@@ -21,16 +21,16 @@ const Footer = () => {
               India's #1 Car Scrapping Platform. Get the best price for your scrap car with our hassle-free, transparent process.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-blue-500 transition-colors">
+              <a href="https://www.facebook.com/" className="text-gray-300 hover:text-blue-500 transition-colors">
                 <IconBrandFacebook className="size-6" />
               </a>
-              <a href="#" className="text-gray-300 hover:text-blue-500 transition-colors">
+              <a href="https://x.com/twitter?lang=en" className="text-gray-300 hover:text-blue-500 transition-colors">
                 <IconBrandTwitter className="size-6" />
               </a>
-              <a href="#" className="text-gray-300 hover:text-blue-500 transition-colors">
+              <a href="https://www.instagram.com/" className="text-gray-300 hover:text-blue-500 transition-colors">
                 <IconBrandInstagram className="size-6" />
               </a>
-              <a href="#" className="text-gray-300 hover:text-blue-500 transition-colors">
+              <a href="https://www.youtube.com/" className="text-gray-300 hover:text-blue-500 transition-colors">
                 <IconBrandYoutube className="size-6" />
               </a>
             </div>
@@ -56,17 +56,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-300 hover:text-blue-400 transition-colors">
+                <Link href="/Terms-of-Services" className="text-gray-300 hover:text-blue-400 transition-colors">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-300 hover:text-blue-400 transition-colors">
+                <Link href="/Privacy-Policy" className="text-gray-300 hover:text-blue-400 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
@@ -78,28 +73,18 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-orange-400">Our Services</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
+                <Link href="/user/create-request" className="text-gray-300 hover:text-orange-400 transition-colors">
                   Car Scrapping
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
+                <Link href="/user/valuation-calculator" className="text-gray-300 hover:text-orange-400 transition-colors">
                   Vehicle Valuation
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Free Pickup
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
+                <Link href="/Privacy-Policy" className="text-gray-300 hover:text-orange-400 transition-colors">
                   Documentation
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Eco-friendly Disposal
                 </Link>
               </li>
             </ul>
