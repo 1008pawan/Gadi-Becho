@@ -141,7 +141,7 @@ const Feedback = () => {
         >
             <IconMessage2Star className='size-8' />
         </button>
-      </div>
+      </div>  
     </div>
   );
 };
