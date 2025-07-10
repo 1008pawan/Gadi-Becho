@@ -12,7 +12,6 @@ import {
 import React from "react";
 import Link from "next/link";
 import DivMarque from "@/components/DivMarque";
-import Signup from "./(main)/user-signup/page";
 const page = () => {
   return (
     <div>
@@ -20,7 +19,7 @@ const page = () => {
 
       {/* hero section */}
       <section className="bg-gradient-to-br from-blue-100 to-blue-200 py-20 xl:px-10 flex">
-        <div className="xl:w-[50%] xl:px-10 px-2">
+        <div className="xl:w-[45%]  px-2">
           <div className="flex xl:justify-start justify-center items-center gap-2 mt-20">
             <IconCar className="size-4" />
             <p>India's #1 Car Scrapping Platform</p>
@@ -46,10 +45,9 @@ const page = () => {
               <a href="tel:+919876543210">Call: +91 98765 43210</a>
             </button>
           </div>
-          <img src="/images/img1.jpg" alt="Car image" className="rounded-lg" />
         </div>
-        <div className="xl:w-[50%]">
-          <Signup />
+        <div className="xl:w-[60%]">
+          <img src="/images/img2.png" alt="Car image" className="h-150 w-250" />
         </div>
       </section>
 

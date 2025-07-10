@@ -60,7 +60,7 @@ const Signin = () => {
               <label htmlFor="password" className="block font-medium">
                 Password
               </label>
-              <a href="/forgot" className="text-blue-500 hover:underline font-bold text-sm">
+              <a href="/forgotPassword" className="text-blue-500 hover:underline font-bold text-sm">
                 Forgot password?
               </a>
             </div>

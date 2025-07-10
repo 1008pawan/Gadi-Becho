@@ -5,7 +5,8 @@ const requestRouter = require('./routers/requestRouter');
 const vendorRouter = require('./routers/vendorRouter');
 const adminRouter = require('./routers/adminRouter');
 const feedbackRouter = require('./routers/feedbackRouter');
-const contactUsRouter = require('./routers/contactUsRouter')
+const contactUsRouter = require('./routers/contactUsRouter');
+const passRouter = require('./routers/passRouter');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/vendor', vendorRouter);
 app.use('/admin', adminRouter);
 app.use('/feedback', feedbackRouter);
 app.use('/contactUs', contactUsRouter);
+app.use('/pass', passRouter);
 
 app.get('/', (req, res) => {
     res.send('Response from Express')
