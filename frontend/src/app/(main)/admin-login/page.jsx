@@ -1,84 +1,133 @@
-'use client'
+"use client";
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-import axios from 'axios';
-import { useFormik } from 'formik';
-import { useRouter } from 'next/navigation';
-import React from 'react'
-import toast from 'react-hot-toast';
-
-const adminLogin = () => {
-
+const AdminLogin = () => {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const adminForm = useFormik({
+  const formik = useFormik({
     initialValues: {
       email: "",
-      password: ""
+      password: "",
     },
-    onSubmit: (values) => {
-      // console.log(values);
-
-      axios
-      .post("http://localhost:5000/admin/authenticate", values)
-      .then((result) => {
-        toast.success("Login Successful");
-        localStorage.setItem("admintoken", result.data.token);
-        router.push("/admin/profile");
-      }).catch((err) => {
-        toast.error("admin failed");
-        console.log(err);
-      });
-      
+    onSubmit: async (values) => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("http://localhost:5000/admin/authenticate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+          }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.admintoken) {
+            localStorage.setItem("admintoken", data.admintoken);
+          }
+          toast.success("Login successful");
+          router.push("/admin/dashboard");
+        } else {
+          toast.error("Invalid credentials");
+        }
+      } catch (err) {
+        toast.error("Login failed");
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
   return (
-        <div>
-      <div className="w-[35%] mx-auto my-10 border border-zinc-300 shadow-2xl p-10 rounded-2xl">
-        <h1 className="text-5xl font-bold text-center py-8">Admin Login</h1>
-        <form onSubmit={adminForm.handleSubmit}>
-          <div>
-            <label htmlFor="email" className="">
-              Email address
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your Email..."
-              onChange={adminForm.handleChange}
-              value={adminForm.values.email}
-              className="text-zinc-600 outline-none border border-zinc-300 rounded-sm w-full p-3 "
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 p-4">
+      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        {/* Left Panel - Illustration */}
+        <div className="hidden md:flex md:w-1/2 flex-col items-center justify-center bg-gradient-to-br from-blue-200 to-blue-400 p-10">
+          <div className="w-full flex flex-col items-center">
+            {/* SVG Illustration */}
+            <svg width="260" height="220" viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="130" cy="110" r="100" fill="#e0e7ff"/>
+              <ellipse cx="130" cy="180" rx="70" ry="12" fill="#93c5fd"/>
+              <rect x="80" y="80" width="100" height="60" rx="12" fill="#fff"/>
+              <rect x="100" y="100" width="60" height="10" rx="4" fill="#2563eb"/>
+              <rect x="100" y="115" width="40" height="8" rx="4" fill="#2563eb"/>
+              <rect x="100" y="130" width="30" height="8" rx="4" fill="#2563eb"/>
+              {/* Admin icon */}
+              <circle cx="160" cy="100" r="14" fill="#2563eb"/>
+              <path d="M154 100l6 6 10-10" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* Person */}
+              <ellipse cx="120" cy="160" rx="12" ry="16" fill="#60a5fa"/>
+              <rect x="114" y="170" width="12" height="24" rx="6" fill="#2563eb"/>
+              <ellipse cx="120" cy="155" rx="6" ry="7" fill="#fff"/>
+            </svg>
+            <h2 className="text-2xl font-bold text-blue-700 mt-8 mb-2 text-center">Welcome to the Admin Portal!</h2>
+            <p className="text-blue-900 text-center text-sm max-w-xs mb-4">Manage your platform, view analytics, and access exclusive admin features with Gadi Becho.</p>
           </div>
-          <div className="mt-3">
-            <div className="flex justify-between">
-              <label htmlFor="password" className="">
-                Password
-              </label>
-              <a
-                href="./forgot"
-                className="text-blue-500 hover:underline font-bold"
+        </div>
+        {/* Right Panel - Login Card */}
+        <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-8">
+          <div className="w-full max-w-md mx-auto rounded-2xl p-8 relative">
+            {/* Welcome badge */}
+            <div className="absolute -top-6 left-8 bg-blue-500 text-white px-6 py-2 rounded-full font-semibold shadow-md text-sm">Welcome back</div>
+            <h3 className="text-xl font-semibold text-blue-700 mb-6 mt-6 text-center md:text-left">Login to your admin account</h3>
+            <form onSubmit={formik.handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-blue-700 mb-1">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.email || ""}
+                  className="w-full px-2 py-2 border-0 border-b-2 border-blue-300 focus:border-blue-500 focus:ring-0 text-blue-900 bg-transparent placeholder-blue-300 transition-all"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-blue-700 mb-1">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={formik.handleChange}
+                    value={formik.values.password || ""}
+                    className="w-full px-2 py-2 border-0 border-b-2 border-blue-300 focus:border-blue-500 focus:ring-0 text-blue-900 bg-transparent placeholder-blue-300 transition-all pr-10"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-400 hover:text-blue-600"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-full font-semibold hover:from-blue-700 hover:to-blue-500 transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
-              </a>
+                {isLoading ? "Logging in..." : "Login"}
+              </button>
+            </form>
+            <div className="flex flex-col items-center mt-6 gap-2">
+              <a href="/forgotPassword" className="text-blue-400 hover:text-blue-600 font-medium">Forgot Password?</a>
             </div>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter your password..."
-              onChange={adminForm.handleChange}
-              value={adminForm.values.password}
-              className="text-zinc-600 outline-none border border-zinc-300 rounded-sm w-full p-3 "
-            />
           </div>
-          <button className="w-full py-3 inline-flex justify-center items-center border border-blue-500 bg-blue-300 rounded-3xl hover:bg-blue-500 gap-3 hover:text-white font-bold mt-4 cursor-pointer">
-            Login
-          </button>
-        </form>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default adminLogin
+export default AdminLogin;

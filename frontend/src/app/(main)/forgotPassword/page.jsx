@@ -55,8 +55,7 @@ const ResetPassword = () => {
       const data = await response.json();
 
       if (data && data.length > 0) {
-        // Fix array check
-        setCurrentUser(data[0]); // Take first matching user
+        setCurrentUser(data[0]);
         await sendOTP();
       } else {
         toast.error("Email not registered");
@@ -69,7 +68,6 @@ const ResetPassword = () => {
   const verifyOTP = async (formData) => {
     setIsVerifying(true);
     try {
-      // First verify OTP with server
       const verifyResponse = await fetch(
         "http://localhost:5000/pass/verify-otp",
         {
@@ -83,7 +81,6 @@ const ResetPassword = () => {
       );
 
       if (verifyResponse.status === 200) {
-        // OTP verified, now reset password
         const resetResponse = await fetch(
           "http://localhost:5000/pass/reset-password",
           {
@@ -115,89 +112,93 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white py-12">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-center">
-          <div className="w-full max-w-md">
-            <h2 className="text-center text-white text-3xl font-bold mb-8 font-[family-name:var(--font-geist-mono)]">
-              Reset Password
-            </h2>
-            <form action="">
-              <div className="mb-4">
-                <input
-                  type="text"
-                  className="w-full font-[family-name:var(--font-geist-mono)] px-3 py-2 border text-gray-100 border-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter Your Email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="text-center">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 to-orange-300 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-10 flex flex-col items-center">
+        {/* Logo */}
+        <div className="mb-6 flex items-center gap-2">
+          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#fff"/><path d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12Z" fill="#ea580c"/></svg>
+          </div>
+          <span className="text-xl font-bold text-gray-900">Gadi Becho</span>
+        </div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Forgot Password?</h1>
+        <p className="text-gray-500 mb-8 text-center">Enter your email address and we'll send you an OTP to reset your password.</p>
+        <form className="w-full" onSubmit={verifyUser}>
+          <div className="mb-4">
+            <input
+              type="email"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all border-gray-300 hover:border-gray-400 text-gray-700"
+              placeholder="Enter your email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-lg font-semibold hover:from-orange-600 hover:to-orange-500 transform hover:-translate-y-1 transition-all duration-300 mb-2"
+          >
+            Send OTP
+          </button>
+        </form>
+        {showReset && (
+          <Formik
+            initialValues={{ otp: "", password: "", confirm: "" }}
+            onSubmit={verifyOTP}
+            validationSchema={validationSchema}
+          >
+            {({ values, handleChange, handleSubmit, errors }) => (
+              <form className="w-full mt-6" onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all border-gray-300 hover:border-gray-400 text-gray-700"
+                    placeholder="Enter OTP"
+                    id="otp"
+                    value={values.otp}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.otp && <p className="text-xs text-red-500 mt-1">{errors.otp}</p>}
+                </div>
+                <div className="mb-4">
+                  <input
+                    type="password"
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all border-gray-300 hover:border-gray-400 text-gray-700"
+                    placeholder="New Password"
+                    id="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
+                </div>
+                <div className="mb-4">
+                  <input
+                    type="password"
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all border-gray-300 hover:border-gray-400 text-gray-700"
+                    placeholder="Confirm Password"
+                    id="confirm"
+                    value={values.confirm}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.confirm && <p className="text-xs text-red-500 mt-1">{errors.confirm}</p>}
+                </div>
                 <button
                   type="submit"
-                  onClick={verifyUser}
-                  className="w-full font-[family-name:var(--font-geist-mono)] bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+                  disabled={isVerifying}
+                  className={`w-full py-3 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-lg font-semibold hover:from-orange-600 hover:to-orange-500 transform hover:-translate-y-1 transition-all duration-300 mb-2 ${isVerifying ? "opacity-70 cursor-not-allowed" : ""}`}
                 >
-                  Send OTP
+                  {isVerifying ? "Verifying..." : "Submit"}
                 </button>
-              </div>
-            </form>
-
-            {showReset && (
-              <Formik
-                initialValues={{ otp: "", password: "", confirm: "" }}
-                onSubmit={verifyOTP}
-                validationSchema={validationSchema}
-              >
-                {({ values, handleChange, handleSubmit, errors }) => (
-                  <form action="" className="mt-6" onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter OTP"
-                        id="otp"
-                        value={values.otp}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <input
-                        type="password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="New Password"
-                        id="password"
-                        value={values.password}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <input
-                        type="password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Confirm Password"
-                        id="confirm"
-                        value={values.confirm}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="text-center">
-                      <button
-                        type="submit"
-                        disabled={isVerifying}
-                        className={`w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200 ${
-                          isVerifying ? "opacity-70 cursor-not-allowed" : ""
-                        }`}
-                      >
-                        {isVerifying ? "Verifying..." : "Submit"}
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </Formik>
+              </form>
             )}
-          </div>
+          </Formik>
+        )}
+        <div className="text-center mt-6">
+          <a href="/user-signin" className="text-orange-600 hover:text-orange-700 font-medium transition-colors">Back to Login</a>
         </div>
       </div>
     </div>
