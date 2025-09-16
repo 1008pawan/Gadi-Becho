@@ -210,6 +210,7 @@ const ScrapRequest = () => {
                                       : "bg-yellow-600 hover:bg-yellow-700"
                                   }
                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+                                  disabled={request.status === "pending" ? false : true}
                             >
                               <IconPencilCheck size={16} className="mr-1" />
                               {request.status === "pending"

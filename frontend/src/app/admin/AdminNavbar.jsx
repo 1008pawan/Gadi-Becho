@@ -54,12 +54,13 @@ const AdminNavbar = () => {
     }
   ];
 
-  const handleLogout = () => {
-    // Remove admin token from localStorage
-    localStorage.removeItem('admintoken');
-    // Redirect to admin login page
-    router.push('/admin-login');
-  };
+const handleLogout = () => {
+  const token = localStorage.getItem("admintoken");
+  console.log("Logging out:", token);
+  localStorage.removeItem("admintoken");
+  router.push("/admin-login");
+};
+
 
   return (
     <nav className="bg-white shadow-lg">
@@ -139,7 +140,7 @@ const AdminNavbar = () => {
           
           {/* Mobile Logout Button */}
           <button
-            onClick={handleLogout}
+            onClick={() => handleLogout()}
             className="w-full flex items-center px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-100"
           >
             <IconLogout className="w-5 h-5 mr-1.5" />

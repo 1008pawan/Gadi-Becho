@@ -100,7 +100,7 @@ router.post('/authenticate', (req, res) => {
                     res.status(500).json(err);
                     
                 }else{
-                    res.status(200).json({token});
+                    res.status(200).json({ admintoken: token });
                 }
             })
         

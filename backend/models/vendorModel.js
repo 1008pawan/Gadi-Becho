@@ -1,14 +1,21 @@
-const { Schema, model } = require('../connection');
+const { Schema, model } = require("../connection");
+const bcrypt = require("bcryptjs");
 
+const vendorSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    location: { type: String, required: true },
+    password: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
-const vendorSchema = new Schema({
-    vendorId: { type: Schema.Types.ObjectId, ref: "vendors"},
-    name: String,
-    email: {type: String, unique:true},
-    location: {type: String, required:true},
-    password: {type: String, required:true},
-    createdAt: {type:Date, default: Date.now}
+// Hash password before saving
+vendorSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 
-
-module.exports = model('vendors', vendorSchema);
+module.exports = model("Vendor", vendorSchema);

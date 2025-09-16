@@ -8,13 +8,14 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
 const vendorSignupSchema = Yup.object().shape({
-  businessName: Yup.string().min(2, "Too Short").max(50, "Too Long").required("Business name is required"),
+  name: Yup.string().min(2, "Too Short").max(50, "Too Long").required("Business name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
+  location: Yup.string().min(2, "Too Short").required("Location is required"),
   password: Yup.string()
     .min(8, "Password is too short")
     .required("Password is required")
     .matches(/[a-z]/, "password must contain a lowercase letter")
-    .matches(/[A-Z]/, "password must contain a uppercase letter")
+    .matches(/[A-Z]/, "password must contain an uppercase letter")
     .matches(/[0-9]/, "password must contain a number")
     .matches(/\W/, "password must contain a special character"),
   confirmPassword: Yup.string()
@@ -28,33 +29,38 @@ const VendorSignup = () => {
   const [showCPassword, setShowCPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const vendorupdateForm = useFormik({
-    initialValues: {
-      businessName: "",
-      email: "",
-      password: "",
-      confirmPassword: ""
-    },
-    onSubmit: async (values, { resetForm }) => {
-      setIsLoading(true);
-      try {
-        await axios.post("http://localhost:5000/vendor/add", {
-          name: values.businessName,
-          email: values.email,
-          password: values.password
-        });
-        toast.success("Vendor Created Successfully");
-        resetForm();
-        router.push("/vendor-login");
-      } catch (err) {
-        toast.error("Vendor Creation Failed");
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    validationSchema: vendorSignupSchema,
-  });
+const vendorForm = useFormik({
+  initialValues: {
+    name: "",
+    email: "",
+    location: "",
+    password: "",
+    confirmPassword: ""
+  },
+  onSubmit: async (values, { resetForm }) => {
+    setIsLoading(true);
+    try {
+      const vendorData = {
+        name: values.name,
+        email: values.email,
+        location: values.location,
+        password: values.password
+      };
+
+      await axios.post("http://localhost:5000/vendor/add", vendorData);
+      toast.success("Vendor Created Successfully");
+      resetForm();
+      router.push("/vendor-login");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Vendor Creation Failed");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  },
+  validationSchema: vendorSignupSchema,
+});
+
 
   return (
     <div className="min-h-screen bg-[#f7b267] flex items-center justify-center p-4">
@@ -70,22 +76,42 @@ const VendorSignup = () => {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Get Started</h1>
           <p className="text-gray-500 mb-8">Welcome to Gadi Becho Vendor – Let’s create your account</p>
-          <form onSubmit={vendorupdateForm.handleSubmit} className="space-y-6">
+          <form onSubmit={vendorForm.handleSubmit} className="space-y-6">
+            {/* Business Name */}
             <div>
-              <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
               <input
                 type="text"
-                id="businessName"
-                name="businessName"
+                id="name"
+                name="name"
                 placeholder="Your Business Name"
-                onChange={vendorupdateForm.handleChange}
-                value={vendorupdateForm.values.businessName}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorupdateForm.errors.businessName && vendorupdateForm.touched.businessName ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
+                onChange={vendorForm.handleChange}
+                value={vendorForm.values.name}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorForm.errors.name && vendorForm.touched.name ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
               />
-              {vendorupdateForm.errors.businessName && vendorupdateForm.touched.businessName && (
-                <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.businessName}</p>
+              {vendorForm.errors.name && vendorForm.touched.name && (
+                <p className="text-xs text-red-500 mt-1">{vendorForm.errors.name}</p>
               )}
             </div>
+
+            {/* Location */}
+            <div>
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">City / Location</label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                placeholder="Your City / Location"
+                onChange={vendorForm.handleChange}
+                value={vendorForm.values.location}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorForm.errors.location && vendorForm.touched.location ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
+              />
+              {vendorForm.errors.location && vendorForm.touched.location && (
+                <p className="text-xs text-red-500 mt-1">{vendorForm.errors.location}</p>
+              )}
+            </div>
+
+            {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
               <input
@@ -93,14 +119,16 @@ const VendorSignup = () => {
                 id="email"
                 name="email"
                 placeholder="vendor@email.com"
-                onChange={vendorupdateForm.handleChange}
-                value={vendorupdateForm.values.email}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorupdateForm.errors.email && vendorupdateForm.touched.email ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
+                onChange={vendorForm.handleChange}
+                value={vendorForm.values.email}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorForm.errors.email && vendorForm.touched.email ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
               />
-              {vendorupdateForm.errors.email && vendorupdateForm.touched.email && (
-                <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.email}</p>
+              {vendorForm.errors.email && vendorForm.touched.email && (
+                <p className="text-xs text-red-500 mt-1">{vendorForm.errors.email}</p>
               )}
             </div>
+
+            {/* Password */}
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
@@ -111,9 +139,9 @@ const VendorSignup = () => {
                   id="password"
                   name="password"
                   placeholder="••••••••"
-                  onChange={vendorupdateForm.handleChange}
-                  value={vendorupdateForm.values.password}
-                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorupdateForm.errors.password && vendorupdateForm.touched.password ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
+                  onChange={vendorForm.handleChange}
+                  value={vendorForm.values.password}
+                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorForm.errors.password && vendorForm.touched.password ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
                 />
                 <button
                   type="button"
@@ -123,10 +151,12 @@ const VendorSignup = () => {
                   {showPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                 </button>
               </div>
-              {vendorupdateForm.errors.password && vendorupdateForm.touched.password && (
-                <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.password}</p>
+              {vendorForm.errors.password && vendorForm.touched.password && (
+                <p className="text-xs text-red-500 mt-1">{vendorForm.errors.password}</p>
               )}
             </div>
+
+            {/* Confirm Password */}
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
               <div className="relative">
@@ -135,9 +165,9 @@ const VendorSignup = () => {
                   id="confirmPassword"
                   name="confirmPassword"
                   placeholder="••••••••"
-                  onChange={vendorupdateForm.handleChange}
-                  value={vendorupdateForm.values.confirmPassword}
-                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorupdateForm.errors.confirmPassword && vendorupdateForm.touched.confirmPassword ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
+                  onChange={vendorForm.handleChange}
+                  value={vendorForm.values.confirmPassword}
+                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${vendorForm.errors.confirmPassword && vendorForm.touched.confirmPassword ? "border-red-400 focus:ring-red-500" : "border-gray-300 hover:border-gray-400"}`}
                 />
                 <button
                   type="button"
@@ -147,10 +177,12 @@ const VendorSignup = () => {
                   {showCPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                 </button>
               </div>
-              {vendorupdateForm.errors.confirmPassword && vendorupdateForm.touched.confirmPassword && (
-                <p className="text-xs text-red-500 mt-1">{vendorupdateForm.errors.confirmPassword}</p>
+              {vendorForm.errors.confirmPassword && vendorForm.touched.confirmPassword && (
+                <p className="text-xs text-red-500 mt-1">{vendorForm.errors.confirmPassword}</p>
               )}
             </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -166,6 +198,7 @@ const VendorSignup = () => {
               )}
             </button>
           </form>
+
           <div className="text-center mt-6">
             <p className="text-gray-600">
               Already have an account?{" "}
@@ -175,7 +208,7 @@ const VendorSignup = () => {
             </p>
           </div>
         </div>
-        {/* Right Panel - Illustration & Marketing */}
+        {/* Right Panel unchanged */}
         <div className="hidden md:flex md:w-1/2 items-center justify-center bg-gradient-to-br from-orange-700 to-orange-500 p-8">
           <div className="w-full max-w-md text-white text-left">
             <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-6" style={{fontFamily:'serif'}}>

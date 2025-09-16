@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminNavbar from './AdminNavbar';
 import { Toaster } from 'react-hot-toast';
@@ -9,12 +9,12 @@ export default function AdminLayout({ children }) {
   const router = useRouter();
 
   // Check for admin authentication
-  useEffect(() => {
-    const admin = localStorage.getItem('admintoken');
-    if (!admin) {
-      router.push('/admin-login');
-    }
-  }, [router]);
+useEffect(() => {
+  const admin = localStorage.getItem('admintoken');
+  // if (!admin) {
+  //   router.push('/admin-login');
+  // }
+}, [router]);
 
   return (
     <div className="min-h-screen bg-gray-50">

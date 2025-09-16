@@ -29,6 +29,8 @@ const Profile = () => {
     const fetchadminProfile = async () => {
       try {
         const token = localStorage.getItem("admintoken");
+        console.log(token);
+
         if (!token) {
           router.push("/admin-login");
           return;

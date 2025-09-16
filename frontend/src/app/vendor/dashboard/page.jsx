@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 const Dashboard = () => {
   const router = useRouter();
   const [stats, setStats] = useState({
-    totalRequests: 0,
-    pendingRequests: 0,
-    completedRequests: 0,
-    totalEarnings: 0,
+      totalRequests: 0,
+      pendingRequests: 0,
+      completedRequests: 0,
+      totalEarnings: 0,
   });
 
   const [recentRequests, setRecentRequests] = useState([]);

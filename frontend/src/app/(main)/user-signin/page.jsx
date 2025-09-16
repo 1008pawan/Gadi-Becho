@@ -36,7 +36,7 @@ const Signin = () => {
         const result = await axios.post("http://localhost:5000/user/authenticate", values);
         toast.success("Welcome back! Sign in successful");
         localStorage.setItem("token", result.data.token);
-        router.push("/user/profile");
+        router.push("/user/create-request");
       } catch (err) {
         toast.error("Sign in failed. Please check your credentials.");
         console.log(err);
