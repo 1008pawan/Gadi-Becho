@@ -28,7 +28,7 @@ const VendorNavbar = () => {
               <img
                 src="/images/logo1.png"
                 alt="Company Logo"
-                className="h-30 md:h-14"
+                className="h-30"
               />
             </Link>
           </div>

@@ -43,7 +43,7 @@ const ManageRequest = () => {
             <p>Loading...Please Wait...</p>
           ) : (
             <table className="w-full shadow-2xl bg-zinc-50">
-              <thead className="border-black bg-zinc-200 text-zinc-600 font-bold text-center">
+              <thead className="border-black bg-zinc-300 text-zinc-600 font-bold text-center">
                 <tr>
                   <td>ID</td>
                   <td>Status</td>
@@ -59,7 +59,7 @@ const ManageRequest = () => {
               <tbody className="text-center text-zinc-700">
                 {RequestList.map((request) => {
                   return (
-                    <tr key={request._id}>
+                    <tr key={request._id} className="hover:bg-zinc-200">
                       <td className="p-2">{request._id}</td>
                       <td className="p-2 whitespace-nowrap">
                         <span
@@ -87,19 +87,18 @@ const ManageRequest = () => {
                       </td>
                       <td className="p-2">
                         <Link href={`/user/update-request/${request._id}`}>
-                          <button className="inline-flex text-sm items-center bg-green-500 text-white px-4 py-2 rounded-lg border hover:bg-green-600 active:bg-green-800">
+                          <button className="inline-flex text-sm items-center bg-green-500 text-white px-2 py-1.5 rounded-lg border hover:bg-green-600 active:bg-green-800 gap-1 cursor-pointer">
                             <IconPencilCheck size={15} />
                             Update
                           </button>
                         </Link>
                         <button
-                          className="inline-flex items-center text-sm bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2"
+                          className="inline-flex items-center text-sm bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2 cursor-pointer"
                           onClick={() => {
                             deleteRequest(request._id);
                           }}
                         >
                           <IconTrash size={15} />
-                          Remove
                         </button>
                       </td>
                     </tr>

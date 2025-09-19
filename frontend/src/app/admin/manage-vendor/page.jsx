@@ -54,14 +54,14 @@ const ManageVendor = () => {
             <tbody className="text-center">
               {vendorList.map((vendor) => {
                 return (
-                  <tr key={vendor._id}>
+                  <tr key={vendor._id} className="hover:bg-zinc-100 border-b border-zinc-300">
                     <td className="p-2">{vendor._id}</td>
                     <td className="p-2">{vendor.name}</td>
                     <td className="p-2">{vendor.email}</td>
                     <td className="p-2">{vendor.createdAt}</td>
                     <td className="p-2">
                       <button
-                        className="inline-flex items-center bg-red-500 text-white px-4 py-2 ml-4 rounded-lg hover:bg-red-600 active:bg-red-800"
+                        className="inline-flex items-center cursor-pointer bg-red-500 text-white px-4 py-2 ml-4 rounded-lg hover:bg-red-600 active:bg-red-800"
                         onClick={() => {deletevendor(vendor._id)}}
                       >
                         <IconTrash size={20}/>

@@ -86,7 +86,7 @@ const ManageRequest = () => {
               <tbody className="text-center text-zinc-700">
                 {RequestList.map((request) => {
                   return (
-                    <tr key={request._id} className="hover:bg-gray-100 border-b">
+                    <tr key={request._id} className="hover:bg-gray-100 border-b border-zinc-300">
                       <td className="p-3 text-xs">{request._id}</td>
                       <td className="p-3">
                         {getStatusBadge(request.status)}
@@ -134,7 +134,7 @@ const ManageRequest = () => {
                         <div className="flex flex-wrap gap-2 justify-center">
                           {/* Delete button */}
                           <button
-                            className="bg-red-600 text-white px-3 flex items-center gap-2 py-2 rounded-lg border hover:bg-red-700 active:bg-red-800"
+                            className="bg-red-600 cursor-pointer text-white px-3 flex items-center gap-2 py-2 rounded-lg border hover:bg-red-700 active:bg-red-800"
                             onClick={() => {
                               deleteRequest(request._id);
                             }}

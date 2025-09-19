@@ -523,7 +523,7 @@ const ValuationCalculator = () => {
 
         {/* Features Section */}
         <div className="mt-12 grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-lg">
+          <div className="bg-white rounded-xl p-6 hover:shadow-2xl">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
               <TrendingUp className="w-6 h-6 text-blue-600" />
             </div>
@@ -533,7 +533,7 @@ const ValuationCalculator = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg">
+          <div className="bg-white rounded-xl p-6 hover:shadow-2xl">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
               <Clock className="w-6 h-6 text-green-600" />
             </div>
@@ -543,7 +543,7 @@ const ValuationCalculator = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg">
+          <div className="bg-white rounded-xl p-6 hover:shadow-2xl">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
               <MapPin className="w-6 h-6 text-purple-600" />
             </div>

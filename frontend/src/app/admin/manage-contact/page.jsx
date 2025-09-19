@@ -68,13 +68,13 @@ const ManageContact = () => {
               <tbody className='text-center text-zinc-700'>
                 {ContactList.map((Contact) => {
                   return (
-                    <tr key = {Contact._id}>
+                    <tr key = {Contact._id} className='border-b border-zinc-300'>
                       <td className='p-2'>{Contact._id}</td>
                       <td className='p-2'>{Contact.name}</td>
                       <td className='p-2'>{Contact.email}</td>
                       <td className='p-2'>{Contact.message}</td>
                       <td className='p-2'>
-                        <button className='inline-flex items-center bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2' onClick={() => {deleteContact(Contact._id)}}>
+                        <button className='inline-flex cursor-pointer items-center bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2' onClick={() => {deleteContact(Contact._id)}}>
                           <IconTrash size={20} />
                           Remove
                         </button>

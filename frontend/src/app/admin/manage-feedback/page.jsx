@@ -48,23 +48,23 @@ const ManageFeedback = () => {
             <table className='w-full shadow-2xl bg-zinc-50'>
               <thead className='border-black bg-zinc-200 text-zinc-600 font-bold text-center'>
                 <tr>
-                  <td>ID</td>
-                  <td>Name</td>
-                  <td>Email</td>
-                  <td>Message</td>
-                  <td>Button</td>
+                  <td className='py-2'>ID</td>
+                  <td className='py-2'>Name</td>
+                  <td className='py-2'>Email</td>
+                  <td className='py-2'>Message</td>
+                  <td className='py-2'>Button</td>
                 </tr>
               </thead>
               <tbody className='text-center text-zinc-700'>
                 {FeedbackList.map((Feedback) => {
                   return (
-                    <tr key = {Feedback._id}>
+                    <tr key = {Feedback._id} className='border-b border-zinc-300'>
                       <td className='p-2'>{Feedback._id}</td>
                       <td className='p-2'>{Feedback.name}</td>
                       <td className='p-2'>{Feedback.email}</td>
                       <td className='p-2'>{Feedback.message}</td>
                       <td className='p-2'>
-                        <button className='inline-flex items-center bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2' onClick={() => {deleteFeedback(Feedback._id)}}>
+                        <button className='inline-flex cursor-pointer items-center bg-red-500 text-white px-4 py-2 rounded-lg border hover:bg-red-600 active:bg-red-800 ml-2' onClick={() => {deleteFeedback(Feedback._id)}}>
                           <IconTrash size={20} />
                           Remove
                         </button>

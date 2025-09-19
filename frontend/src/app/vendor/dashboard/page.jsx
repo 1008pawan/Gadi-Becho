@@ -289,11 +289,11 @@ const Dashboard = () => {
           {/* Recent Requests Table */}
           <div className="mt-8">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Recent Requests</h3>
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+            <div className="bg-white shadow-lg overflow-hidden sm:rounded-md">
               {recentRequests.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gray-100">
                       <tr>
                         <th
                           scope="col"

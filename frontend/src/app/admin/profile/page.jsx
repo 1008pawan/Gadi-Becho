@@ -134,13 +134,13 @@ const Profile = () => {
               {({ errors, touched, isSubmitting }) => (
                 <Form className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm px-2 font-medium text-gray-700">
                       Email
                     </label>
                     <Field
                       type="email"
                       name="email"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 px-2 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                     {errors.email && touched.email && (
                       <div className="text-red-500 text-sm mt-1">
@@ -150,14 +150,14 @@ const Profile = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm px-2 font-medium text-gray-700">
                       Password
                     </label>
                     <Field
                       type="text"
                       name="password"
                       autoComplete="new-password"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full px-2 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                     {errors.password && touched.password && (
                       <div className="text-red-500 text-sm mt-1">
@@ -170,14 +170,14 @@ const Profile = () => {
                     <button
                       type="button"
                       onClick={() => setIsEditing(false)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                      className="px-4 py-2 cursor-pointer text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                      className="px-4 py-2 cursor-pointer text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
                     >
                       {isSubmitting ? "Saving..." : "Save Changes"}
                     </button>
@@ -200,7 +200,7 @@ const Profile = () => {
               <div className="flex justify-end">
                 <button
                   onClick={handleEdit}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                  className="px-4 py-2 cursor-pointer text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
                 >
                   Edit Profile
                 </button>
